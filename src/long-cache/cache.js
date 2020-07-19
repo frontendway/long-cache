@@ -43,9 +43,9 @@ export const fetchTarget = (longCache, _this) => {
   return longCache ? window : _this
 }
 
-export const fetchAfterLink = localkey => {
-  const afterLink = window.localStorage.getItem(localkey)
-  return afterLink || ''
+export const fetchUrl = key => {
+  if (!key) return
+  return window.localStorage.getItem(key) || ''
 }
 
 export const splice = (list, key) => {

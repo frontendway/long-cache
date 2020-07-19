@@ -6,12 +6,13 @@ import {
   fetchkey,
   strategy,
   fetchComponentName,
-  fetchAfterLink,
+  fetchUrl,
   splice,
   fetchTarget,
   strategyWrap,
   removeInactivation
 } from './cache.js'
+import { parse } from 'querystring'
 
 export default {
   name: 'keep',
@@ -22,8 +23,9 @@ export default {
     exclude: allowTypes,
     max: [String, Number],
     longCache: Boolean,
-    backUrl: String,
-    localKey: String
+    from: String,
+    localKey: String,
+    refresh: Boolean
   },
 
   created () {
@@ -51,13 +53,13 @@ export default {
   mounted () {
     if (this.include) {
       this.$watch('include', value => {
-        strategyWrap(this, name => allow(val, name))
+        strategyWrap(this, name => allow(value, name))
       })
     }
 
     if (this.exclude) {
       this.$watch('exclude', value => {
-        strategyWrap(this, name => !allow(val, name))
+        strategyWrap(this, name => !allow(value, name))
       })
     }
   },
@@ -81,15 +83,21 @@ export default {
       const {
         target, 
         localKey, 
-        backUrl, 
+        from, 
         max,
         keys,
-        _vnode
+        _vnode,
+        refresh
       } = this
       const cache = target.cache || (target.cache = {})
       const key = fetchkey(componentVnode, options)
 
-      if (fetchAfterLink(localKey) === backUrl) cache[key] = null
+      if (
+        refresh && allow(from, fetchUrl(localKey))
+      ) {
+        cache[key] = null
+        componentVnode.key = parseInt(Math.random() * 1000)
+      }
 
       const cached = cache[key]
       if (cached) {
