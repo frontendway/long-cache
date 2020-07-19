@@ -1,12 +1,13 @@
-import LongCache from './long-cache/Index.vue'
+import longCache from './long-cache/Index.vue'
+
+export const LongCache = longCache
 
 let _vue = null
-
-LongCache.install = Vue => {
-  if (_vue) return
-
-  _vue = Vue
-  Vue.component('long-cache', LongCache)
+export default {
+  install: Vue => {
+    if (_vue) return
+  
+    _vue = Vue
+    Vue.component('long-cache', longCache)
+  }
 }
-
-export default LongCache

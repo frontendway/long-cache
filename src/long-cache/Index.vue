@@ -10,9 +10,9 @@ import {
   splice,
   fetchTarget,
   strategyWrap,
-  removeInactivation
+  removeInactivation,
+  setKey
 } from './cache.js'
-import { parse } from 'querystring'
 
 export default {
   name: 'keep',
@@ -92,17 +92,15 @@ export default {
       const cache = target.cache || (target.cache = {})
       const key = fetchkey(componentVnode, options)
 
-      if (
-        refresh && allow(from, fetchUrl(localKey))
-      ) {
+      if (refresh && allow(from, fetchUrl(localKey))) {
         cache[key] = null
-        componentVnode.key = parseInt(Math.random() * 1000)
+        componentVnode.key = setKey(options)
       }
 
       const cached = cache[key]
       if (cached) {
         componentVnode.componentInstance = cached.componentInstance
-        splice(this.keys, key)
+        splice(keys, key)
         keys.push(key)
 
       } else {

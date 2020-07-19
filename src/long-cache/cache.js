@@ -1,3 +1,4 @@
+let _$id = 0
 
 function isAsyncVnode (vnode) {
   return vnode.isComment && vnode.asyncFactory
@@ -89,4 +90,8 @@ export const strategyWrap = (instance, filter) => {
       }
     }
   }
+}
+
+export const setKey = opt => {
+  return Math.random()
 }
