@@ -22,27 +22,20 @@ export default {
     include: allowTypes,
     exclude: allowTypes,
     max: [String, Number],
-    longCache: Boolean,
+    keepLong: Boolean,
     from: String,
     localKey: String,
-    refresh: Boolean
+    refresh: Boolean,
+    cacheKey: String
   },
 
   created () {
-    const target = this.target = fetchTarget(this.longCache, this)
-    const empty = Object.create(null)
-
-    if (!this.longCache) {
-      target.cache = empty
-    } else {
-      target.cache || (target.cache = empty)
-    }
-
-    this.keys = []
+    this.normalize()
+    this.init()
   },
 
   destroyed () {
-    if (this.longCache) return
+    if (this.keepLong) return
 
     const { target: {cache}, keys } = this
     for (const key in this.target.cache) {
@@ -87,9 +80,10 @@ export default {
         max,
         keys,
         _vnode,
-        refresh
+        refresh,
+        _cacheKey
       } = this
-      const cache = target.cache || (target.cache = {})
+      const cache = target[_cacheKey] || (target[_cacheKey] = {})
       const key = fetchkey(componentVnode, options)
 
       if (refresh && allow(from, fetchUrl(localKey))) {
@@ -113,6 +107,31 @@ export default {
     }
 
     return componentVnode || (slots && slots[0])
+  },
+  
+  methods: {
+    init () {
+      const { keepLong } = this
+      const target = this.target = fetchTarget(keepLong, this)
+      const empty = Object.create(null)
+
+      if (!keepLong) {
+        target.cache = empty
+      } else {
+        target.cache || (target.cache = empty)
+      }
+
+      this.keys = []
+    },
+
+    normalize () {
+      const { keepLong, cacheKey } = this
+      if (keepLong && !cacheKey) {
+        console.error('cacheKey is required')
+      } else {
+        this._cacheKey = cacheKey
+      }
+    }
   }
 }
 </script>
