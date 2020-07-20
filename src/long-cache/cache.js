@@ -1,4 +1,7 @@
-let _$id = 0
+let $id = 0
+
+const STRING = '[object String]'
+const REGEXP = '[object RegExp]'
 
 function isAsyncVnode (vnode) {
   return vnode.isComment && vnode.asyncFactory
@@ -30,12 +33,18 @@ export const fetchComponentName = opt => {
   return opt && (opt.Ctor.options.name || opt.tag)
 }
 
+function match (rules, name) {
+  return rules.some(rule => {
+    return type(rule) === REGEXP ? rule.test(name) : rule === name
+  })
+}
+
 export const allow = (rules, name) => {
   if (Array.isArray(rules)) {
-    return rules.indexOf(name) > -1
-  } else if (type(rules) === '[object String]') {
+    return match(rules, name)
+  } else if (type(rules) === STRING) {
     return rules.split(',').indexOf(name) > -1
-  } else if (type(rules) === '[object RegExp]') {
+  } else if (type(rules) === REGEXP) {
     return rules.test(name)
   }
 }
@@ -93,5 +102,5 @@ export const strategyWrap = (instance, filter) => {
 }
 
 export const setKey = opt => {
-  return Math.random()
+  return `$long-cache${++$id}`
 }

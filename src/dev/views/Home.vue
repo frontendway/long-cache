@@ -3,10 +3,9 @@
     <header @click="$router.push('/search')">header</header>
     <div class="content">
       <long-cache 
-        :keep-long="true" 
-        :refresh="true" 
-        from="/detail" 
-        local-key="afterLink",
+        :keep-long="true"
+        :from="[/\/detail/]" 
+        local-key="afterLink"
         cache-key="home"
       >
         <router-view></router-view>

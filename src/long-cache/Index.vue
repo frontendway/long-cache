@@ -23,9 +23,8 @@ export default {
     exclude: allowTypes,
     max: [String, Number],
     keepLong: Boolean,
-    from: String,
+    from: [String, RegExp, Array],
     localKey: String,
-    refresh: Boolean,
     cacheKey: String
   },
 
@@ -80,13 +79,12 @@ export default {
         max,
         keys,
         _vnode,
-        refresh,
         _cacheKey
       } = this
       const cache = target[_cacheKey] || (target[_cacheKey] = {})
       const key = fetchkey(componentVnode, options)
 
-      if (refresh && allow(from, fetchUrl(localKey))) {
+      if (allow(from, fetchUrl(localKey))) {
         cache[key] = null
         componentVnode.key = setKey(options)
       }
@@ -129,7 +127,7 @@ export default {
       if (keepLong && !cacheKey) {
         console.error('cacheKey is required')
       } else {
-        this._cacheKey = cacheKey
+        this._cacheKey = cacheKey || 'cache'
       }
     }
   }
