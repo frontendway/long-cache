@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <span @click="$router.push('/')">login</span>
+  <div @click="$router.push('/')">
+    login
   </div>
 </template>
 

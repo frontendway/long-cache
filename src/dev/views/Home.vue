@@ -8,7 +8,7 @@
         local-key="afterLink"
         cache-key="home"
       >
-        <router-view></router-view>
+        <router-view />
       </long-cache>
     </div>
     <footer>

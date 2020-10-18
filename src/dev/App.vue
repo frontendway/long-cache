@@ -1,7 +1,5 @@
 <template>
   <div id="app">
-    <long-cache exclude="home">
-      <router-view/>
-    </long-cache>
+    <router-view />
   </div>
 </template>

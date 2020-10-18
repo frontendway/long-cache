@@ -15,7 +15,7 @@ import {
 } from './cache.js'
 
 export default {
-  name: 'keep',
+  name: 'long-cache',
   abstract: true,
 
   props: {
