@@ -101,6 +101,6 @@ export const strategyWrap = (instance, filter) => {
   }
 }
 
-export const setKey = opt => {
+export const setKey = () => {
   return `$long-cache${++$id}`
 }

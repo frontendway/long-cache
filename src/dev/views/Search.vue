@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div @click="$router.push('/detail')">
     search
   </div>
 </template>

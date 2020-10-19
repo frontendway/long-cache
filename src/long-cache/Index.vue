@@ -60,7 +60,7 @@ export default {
     const slots = this.$slots.default
     const componentVnode = fetchFirstCVnode(slots)
     const options = componentVnode && componentVnode.componentOptions
-
+    
     if (options) {
       const name = fetchComponentName(options)
       const { include, exclude } = this
@@ -83,10 +83,10 @@ export default {
       } = this
       const cache = target[_cacheKey] || (target[_cacheKey] = {})
       const key = fetchkey(componentVnode, options)
-
+      
       if (allow(from, fetchUrl(localKey))) {
         cache[key] = null
-        componentVnode.key = setKey(options)
+        splice(keys, key)
       }
 
       const cached = cache[key]
@@ -118,7 +118,7 @@ export default {
       } else {
         target.cache || (target.cache = empty)
       }
-
+      
       this.keys = []
     },
 
