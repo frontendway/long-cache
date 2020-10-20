@@ -49,8 +49,8 @@ export const allow = (rules, name) => {
   }
 }
 
-export const fetchTarget = (longCache, _this) => {
-  return longCache ? window : _this
+export const fetchTarget = (keepActive, _this) => {
+  return keepActive ? window : _this
 }
 
 export const fetchUrl = key => {

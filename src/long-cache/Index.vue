@@ -22,7 +22,7 @@ export default {
     include: allowTypes,
     exclude: allowTypes,
     max: [String, Number],
-    keepLong: Boolean,
+    keepActive: Boolean,
     from: [String, RegExp, Array],
     localKey: String,
     cacheKey: String
@@ -34,7 +34,7 @@ export default {
   },
 
   destroyed () {
-    if (this.keepLong) return
+    if (this.keepActive) return
 
     const { target: {cache}, keys } = this
     for (const key in this.target.cache) {
@@ -78,6 +78,7 @@ export default {
         from, 
         max,
         keys,
+        keepActive,
         _vnode,
         _cacheKey
       } = this
@@ -109,23 +110,28 @@ export default {
   
   methods: {
     init () {
-      const { keepLong } = this
-      const target = this.target = fetchTarget(keepLong, this)
+      const { keepActive, _cacheKey } = this
+      const target = this.target = fetchTarget(keepActive, this)
       const empty = Object.create(null)
 
-      if (!keepLong) {
+      if (!keepActive) {
         target.cache = empty
+        target.keys = []
       } else {
-        target.cache || (target.cache = empty)
+        target[_cacheKey] = empty
+        target.[_keys] = []
       }
-      
-      this.keys = []
     },
 
     normalize () {
-      const { keepLong, cacheKey } = this
-      if (keepLong && !cacheKey) {
-        console.error('cacheKey is required')
+      const { keepActive, cacheKey } = this
+
+      if (keepActive) {
+        if (!cacheKey) {
+          console.error('cacheKey is required')
+        } else if (!keys) {
+          console.error('keys is required')
+        }
       } else {
         this._cacheKey = cacheKey || 'cache'
       }

@@ -2,8 +2,8 @@
   <div id="app">
     <long-cache 
       :include="['search']"
-      :exclude="['home']"
       :from="['/detail']"
+      :exclude="['home']"
       local-key="afterLink"
       cache-key="root"
     >
