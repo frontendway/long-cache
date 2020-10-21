@@ -31,7 +31,7 @@ export default {
   },
 
   created () {
-    this.normalize()
+    this.checkProps()
     this.init()
   },
 
@@ -61,7 +61,6 @@ export default {
   },
 
   render () {
-    // debugger
     const slots = this.$slots.default
     const componentVnode = fetchFirstCVnode(slots)
     const options = componentVnode && componentVnode.componentOptions
@@ -114,7 +113,6 @@ export default {
   
   methods: {
     init () {
-      // debugger
       const { keepActive, mapKey } = this
 
       const storage = { keys: [] }
@@ -127,7 +125,7 @@ export default {
       }
     },
 
-    normalize () {
+    checkProps () {
       const { 
         mapKey,
         nameKey,
