@@ -10,8 +10,8 @@
 <script>
 export default {
   name: 'nav3',
-  created () {
-    console.log('nav3 created')
+  mounted () {
+    console.log('nav3 mounted')
   }
 }
 </script>

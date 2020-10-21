@@ -1,14 +1,12 @@
-let $id = 0
-
 const STRING = '[object String]'
 const REGEXP = '[object RegExp]'
 
+export const globalMap = new Map()
+
+export const allowTypes = [String, RegExp, Array]
+
 function isAsyncVnode (vnode) {
   return vnode.isComment && vnode.asyncFactory
-}
-
-function type (target) {
-  return window.toString.call(target)
 }
 
 export const fetchFirstCVnode = slots => {
@@ -27,10 +25,12 @@ export const fetchkey = (componentVnode, opt) => {
   : componentVnode.key
 }
 
-export const allowTypes = [String, RegExp, Array]
-
 export const fetchComponentName = opt => {
   return opt && (opt.Ctor.options.name || opt.tag)
+}
+
+function type (target) {
+  return window.toString.call(target)
 }
 
 function match (rules, name) {
@@ -40,31 +40,26 @@ function match (rules, name) {
 }
 
 export const allow = (rules, name) => {
+  if (!rules || !name) return false
+
+  const originType = type(rules)
   if (Array.isArray(rules)) {
     return match(rules, name)
-  } else if (type(rules) === STRING) {
+  } else if (originType === STRING) {
     return rules.split(',').indexOf(name) > -1
-  } else if (type(rules) === REGEXP) {
+  } else if (originType === REGEXP) {
     return rules.test(name)
   }
 }
 
-export const fetchTarget = (keepActive, _this) => {
-  return keepActive ? window : _this
-}
-
 export const fetchUrl = key => {
-  if (!key) return
-  return window.localStorage.getItem(key) || ''
+  if (key) return window.localStorage.getItem(key) || ''
 }
 
 export const splice = (list, key) => {
-  if (!Array.isArray(list)) return
-
-  for (let i=0; i<list.length; i++) {
-    if (list[i] === key) {
-      list.splice(i, 1)
-    }
+  if (Array.isArray(list)) {
+    const idx = list.indexOf(key)
+    if (idx !== -1) list.splice(idx, 1)
   }
 }
 
@@ -88,19 +83,20 @@ export const strategy = (keys, max, cache, current) => {
   }
 }
 
-export const strategyWrap = (instance, filter) => {
-  const {target: {cache}, keys, _vnode} = instance
-  for (const key in cache) {
-    const cached = cache[key]
+export const strategyWrap = (vm, filter) => {
+  const { mapKey, _vnode } = vm
+  const storage = globalMap.get(mapKey)
+  const keys = storage.keys
+
+  for (const key in storage) {
+    if (key === 'keys') continue
+
+    const cached = storage[key]
     if (cached) {
       const name = fetchComponentName(cached.componentOptions)
       if (name && !filter(name)) {
-        removeInactivation(cache, keys[0], keys, _vnode)
+        removeInactivation(storage, keys[0], keys, _vnode)
       }
     }
   }
-}
-
-export const setKey = () => {
-  return `$long-cache${++$id}`
 }

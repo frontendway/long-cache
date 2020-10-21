@@ -19,14 +19,17 @@ const routes = [
     children: [
       {
         path: 'nav1',
+        name: 'nav1',
         component: Nav1
       },
       {
         path: 'nav2',
+        name: 'nav2',
         component: Nav2
       },
       {
         path: 'nav3',
+        name: 'nav3',
         component: Nav3
       }
     ]
@@ -53,7 +56,7 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  window.localStorage.setItem('afterLink', from.fullPath)
+  window.localStorage.setItem('afterLink', from.name)
   next()
 })
 

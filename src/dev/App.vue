@@ -1,11 +1,9 @@
 <template>
   <div id="app">
-    <long-cache 
-      :include="['search']"
-      :from="['/detail']"
-      :exclude="['home']"
-      local-key="afterLink"
-      cache-key="root"
+    <long-cache
+      map-key="root"
+      name-key="afterLink"
+      fresh-routes="search"
     >
       <router-view />
     </long-cache>

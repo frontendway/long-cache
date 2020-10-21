@@ -2,12 +2,8 @@
   <div>
     <header @click="$router.push('/search')">header</header>
     <div class="content">
-      <long-cache 
-        :keep-active="true"
-        :from="[/\/detail/]" 
-        local-key="afterLink"
-        cache-key="home"
-        keys-key="test"
+      <long-cache
+        map-key="home"
       >
         <router-view />
       </long-cache>
@@ -23,10 +19,8 @@
 <script>
 export default {
   name: 'home',
-  data () {
-    return {
-      pattern: 'nav1,nav2'
-    }
+  mounted () {
+    console.log('home mounted')
   }
 }
 </script>

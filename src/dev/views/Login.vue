@@ -7,8 +7,8 @@
 <script>
 export default {
   name: 'login',
-  created () {
-    console.log('login created')
+  mounted () {
+    console.log('login mounted')
   }
 }
 </script>

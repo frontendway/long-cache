@@ -10,8 +10,10 @@ import {
   splice,
   fetchTarget,
   strategyWrap,
-  removeInactivation,
-  setKey
+  globalMap,
+  setPrevComponent,
+  getPrevComponent,
+  removeInactivation
 } from './cache.js'
 
 export default {
@@ -23,9 +25,9 @@ export default {
     exclude: allowTypes,
     max: [String, Number],
     keepActive: Boolean,
-    from: [String, RegExp, Array],
-    localKey: String,
-    cacheKey: String
+    freshRoutes: [String, RegExp, Array],
+    nameKey: String,
+    mapKey: String
   },
 
   created () {
@@ -36,9 +38,11 @@ export default {
   destroyed () {
     if (this.keepActive) return
 
-    const { target: {cache}, keys } = this
-    for (const key in this.target.cache) {
-      removeInactivation(cache, key, keys)
+    const storage = globalMap.get(this.mapKey)
+    const keys = storage.keys
+    delete storage.keys
+    for (const key in storage) {
+      removeInactivation(storage, key, keys)
     }
   },
 
@@ -57,10 +61,11 @@ export default {
   },
 
   render () {
+    // debugger
     const slots = this.$slots.default
     const componentVnode = fetchFirstCVnode(slots)
     const options = componentVnode && componentVnode.componentOptions
-    
+
     if (options) {
       const name = fetchComponentName(options)
       const { include, exclude } = this
@@ -73,33 +78,32 @@ export default {
       }
 
       const {
-        target, 
-        localKey, 
-        from, 
         max,
-        keys,
-        keepActive,
         _vnode,
-        _cacheKey
+        mapKey,
+        nameKey, 
+        keepActive,
+        freshRoutes 
       } = this
-      const cache = target[_cacheKey] || (target[_cacheKey] = {})
+      const storage = globalMap.get(mapKey)
       const key = fetchkey(componentVnode, options)
-      
-      if (allow(from, fetchUrl(localKey))) {
-        cache[key] = null
-        splice(keys, key)
+
+      if (allow(freshRoutes, fetchUrl(nameKey))) {
+        storage[key] = null
+        splice(storage.keys, key)
       }
 
-      const cached = cache[key]
-      if (cached) {
-        componentVnode.componentInstance = cached.componentInstance
+      const component = storage[key]
+      const keys = storage.keys
+      if (component) {
+        componentVnode.componentInstance = component.componentInstance
         splice(keys, key)
         keys.push(key)
 
       } else {
-        cache[key] = componentVnode
+        storage[key] = componentVnode
         keys.push(key)
-        strategy(keys, max, cache, _vnode)
+        strategy(keys, max, storage, _vnode)
       }
 
       componentVnode.data.keepAlive = true
@@ -110,30 +114,30 @@ export default {
   
   methods: {
     init () {
-      const { keepActive, _cacheKey } = this
-      const target = this.target = fetchTarget(keepActive, this)
-      const empty = Object.create(null)
+      // debugger
+      const { keepActive, mapKey } = this
 
-      if (!keepActive) {
-        target.cache = empty
-        target.keys = []
+      const storage = { keys: [] }
+      if (keepActive) {
+        if (!globalMap.has(mapKey)) {
+          globalMap.set(mapKey, storage)
+        }
       } else {
-        target[_cacheKey] = empty
-        target.[_keys] = []
+        globalMap.set(mapKey, storage)
       }
     },
 
     normalize () {
-      const { keepActive, cacheKey } = this
+      const { 
+        mapKey,
+        nameKey,
+        freshRoutes
+      } = this
 
-      if (keepActive) {
-        if (!cacheKey) {
-          console.error('cacheKey is required')
-        } else if (!keys) {
-          console.error('keys is required')
-        }
-      } else {
-        this._cacheKey = cacheKey || 'cache'
+      if (!mapKey) {
+        console.error('map-key is required')
+      } else if (freshRoutes && !nameKey) {
+        console.error('path-key is required')
       }
     }
   }

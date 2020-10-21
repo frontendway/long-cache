@@ -7,8 +7,8 @@
 <script>
 export default {
   name: 'search',
-  created () {
-    console.log('search created')
+  mounted () {
+    console.log('search mounted')
   }
 }
 </script>

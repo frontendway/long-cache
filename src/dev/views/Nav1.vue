@@ -1,7 +1,8 @@
 <template>
   <div>
     <div>
-      <router-link to="/detail">去详情</router-link>
+      <router-link to="/detail">去详情页</router-link>
+      <router-link to="/search">去搜索页</router-link>
     </div>
     nav1
   </div>
