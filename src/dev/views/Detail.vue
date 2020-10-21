@@ -18,12 +18,6 @@ export default {
   name: 'detail',
   created () {
     console.log('详情页 created')
-  },
-  activated () {
-    console.log('详情页 activated')
-  },
-  deactivated () {
-    console.log('详情页 deactivated')
   }
 }
 </script>

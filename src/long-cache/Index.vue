@@ -6,11 +6,12 @@ import {
   fetchkey,
   strategy,
   fetchComponentName,
-  fetchUrl,
+  fetchRouteName,
   splice,
+  isRefresh,
+  globalMap,
   fetchTarget,
   strategyWrap,
-  globalMap,
   setPrevComponent,
   getPrevComponent,
   removeInactivation
@@ -21,13 +22,13 @@ export default {
   abstract: true,
 
   props: {
+    rules: Object,
+    mapKey: String,
     include: allowTypes,
     exclude: allowTypes,
-    max: [String, Number],
     keepActive: Boolean,
-    freshRoutes: [String, RegExp, Array],
-    nameKey: String,
-    mapKey: String
+    max: [String, Number],
+    routeName: String
   },
 
   created () {
@@ -78,16 +79,16 @@ export default {
 
       const {
         max,
+        rules, 
         _vnode,
         mapKey,
-        nameKey, 
-        keepActive,
-        freshRoutes 
+        routeName, 
+        keepActive
       } = this
       const storage = globalMap.get(mapKey)
       const key = fetchkey(componentVnode, options)
 
-      if (allow(freshRoutes, fetchUrl(nameKey))) {
+      if (isRefresh(rules, name, fetchRouteName(routeName))) {
         storage[key] = null
         splice(storage.keys, key)
       }
@@ -128,13 +129,13 @@ export default {
     checkProps () {
       const { 
         mapKey,
-        nameKey,
-        freshRoutes
+        routeName,
+        rules
       } = this
 
       if (!mapKey) {
         console.error('map-key is required')
-      } else if (freshRoutes && !nameKey) {
+      } else if (rules && !routeName) {
         console.error('path-key is required')
       }
     }

@@ -39,6 +39,18 @@ function match (rules, name) {
   })
 }
 
+export const isRefresh = (rules, name, beforeRouteName) => {
+  if (!rules || !name || !beforeRouteName) return
+
+  const rule = rules[name]
+  if (
+    rule && 
+    (allow(rule.refresh, beforeRouteName) || !allow(rule.notRefresh, beforeRouteName))
+  ) {
+    return true
+  }
+}
+
 export const allow = (rules, name) => {
   if (!rules || !name) return false
 
@@ -52,7 +64,7 @@ export const allow = (rules, name) => {
   }
 }
 
-export const fetchUrl = key => {
+export const fetchRouteName = key => {
   if (key) return window.localStorage.getItem(key) || ''
 }
 
