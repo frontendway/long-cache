@@ -1,21 +1,22 @@
 <script>
 import {
-  allowTypes,
+  warn,
   allow,
-  fetchFirstCVnode,
+  splice,
+  allowTypes,
   fetchkey,
   strategy,
-  fetchComponentName,
-  fetchRouteName,
-  splice,
-  isRefresh,
   globalMap,
+  isRefresh,
   fetchTarget,
   strategyWrap,
-  setPrevComponent,
-  getPrevComponent,
-  removeInactivation
-} from './cache.js'
+  fetchRouteName,
+  fetchFirstCVnode,
+  fetchComponentName,
+  removeInactivation,
+  setPrevRouteName,
+  getPrevRouteName
+} from './index.js'
 
 export default {
   name: 'long-cache',
@@ -27,24 +28,18 @@ export default {
     include: allowTypes,
     exclude: allowTypes,
     keepActive: Boolean,
-    max: [String, Number],
-    routeName: String
+    max: [String, Number]
+  },
+
+  watch: {
+    $route (to, from) {
+      setPrevRouteName(from.name)
+    }
   },
 
   created () {
-    this.checkProps()
+    this.validate()
     this.init()
-  },
-
-  destroyed () {
-    if (this.keepActive) return
-
-    const storage = globalMap.get(this.mapKey)
-    const keys = storage.keys
-    delete storage.keys
-    for (const key in storage) {
-      removeInactivation(storage, key, keys)
-    }
   },
 
   mounted () {
@@ -82,13 +77,12 @@ export default {
         rules, 
         _vnode,
         mapKey,
-        routeName, 
         keepActive
       } = this
       const storage = globalMap.get(mapKey)
       const key = fetchkey(componentVnode, options)
-
-      if (isRefresh(rules, name, fetchRouteName(routeName))) {
+      
+      if (isRefresh(rules, name, getPrevRouteName())) {
         storage[key] = null
         splice(storage.keys, key)
       }
@@ -111,10 +105,24 @@ export default {
 
     return componentVnode || (slots && slots[0])
   },
+
+  destroyed () {
+    if (this.keepActive) return
+
+    const storage = globalMap.get(this.mapKey)
+    const keys = storage.keys
+    delete storage.keys
+    for (const key in storage) {
+      removeInactivation(storage, key, keys)
+    }
+  },
   
   methods: {
     init () {
-      const { keepActive, mapKey } = this
+      const { 
+        keepActive, 
+        mapKey 
+      } = this
 
       const storage = { keys: [] }
       if (keepActive) {
@@ -126,17 +134,17 @@ export default {
       }
     },
 
-    checkProps () {
+    validate () {
       const { 
+        rules,
         mapKey,
-        routeName,
-        rules
+        $route
       } = this
-
+      
       if (!mapKey) {
-        console.error('map-key is required')
-      } else if (rules && !routeName) {
-        console.error('path-key is required')
+        warn('map-key is required')
+      } else if (rules && !$route) {
+        warn('vue-router not installed')
       }
     }
   }

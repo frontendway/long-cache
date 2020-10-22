@@ -1,5 +1,13 @@
 const STRING = '[object String]'
 const REGEXP = '[object RegExp]'
+let prevRouteName = null
+
+export const setPrevRouteName = value => {
+  prevRouteName = value
+}
+export const getPrevRouteName = value => {
+  return prevRouteName
+}
 
 export const globalMap = new Map()
 
@@ -40,20 +48,22 @@ function match (rules, name) {
 }
 
 export const isRefresh = (rules, name, beforeRouteName) => {
+  // debugger
   if (!rules || !name || !beforeRouteName) return
 
   const rule = rules[name]
   if (
     rule && 
-    (allow(rule.refresh, beforeRouteName) || !allow(rule.notRefresh, beforeRouteName))
+    (
+      (rule.refresh && allow(rule.refresh, beforeRouteName)) || 
+      (rule.notRefresh && !allow(rule.notRefresh, beforeRouteName))
+    )
   ) {
     return true
   }
 }
 
 export const allow = (rules, name) => {
-  if (!rules || !name) return false
-
   const originType = type(rules)
   if (Array.isArray(rules)) {
     return match(rules, name)
@@ -111,4 +121,8 @@ export const strategyWrap = (vm, filter) => {
       }
     }
   }
+}
+
+export const warn = info => {
+  console.error(info)
 }

@@ -2,9 +2,8 @@
   <div id="app">
     <long-cache
       map-key="root"
-      :rules="rules"
       exclude="home"
-      route-name="afterLink"
+      :rules="rules"
     >
       <router-view />
     </long-cache>
@@ -17,7 +16,7 @@ export default {
     return {
       rules: {
         search: {
-          notRefresh: 'detail'
+          notRefresh: 'detail,nav1'
         }
       }
     }

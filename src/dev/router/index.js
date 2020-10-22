@@ -55,9 +55,4 @@ const router = new VueRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
-  window.localStorage.setItem('afterLink', from.name)
-  next()
-})
-
 export default router
