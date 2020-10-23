@@ -8,7 +8,6 @@ import {
   strategy,
   globalMap,
   isRefresh,
-  fetchTarget,
   strategyWrap,
   fetchRouteName,
   fetchFirstCVnode,
@@ -76,15 +75,14 @@ export default {
         max,
         rules, 
         _vnode,
-        mapKey,
-        keepActive
+        mapKey
       } = this
       const storage = globalMap.get(mapKey)
       const key = fetchkey(componentVnode, options)
 
       if (isRefresh(rules, name, getPrevRouteName())) {
-        this._vnode = null
         storage[key] = null
+        this._vnode = null
         splice(storage.keys, key)
       }
 
