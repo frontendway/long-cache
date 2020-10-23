@@ -5,7 +5,7 @@ let prevRouteName = null
 export const setPrevRouteName = value => {
   prevRouteName = value
 }
-export const getPrevRouteName = value => {
+export const getPrevRouteName = () => {
   return prevRouteName
 }
 

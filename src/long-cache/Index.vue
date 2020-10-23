@@ -81,7 +81,7 @@ export default {
       } = this
       const storage = globalMap.get(mapKey)
       const key = fetchkey(componentVnode, options)
-      
+
       if (isRefresh(rules, name, getPrevRouteName())) {
         storage[key] = null
         splice(storage.keys, key)

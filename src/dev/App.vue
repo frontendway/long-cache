@@ -16,7 +16,7 @@ export default {
     return {
       rules: {
         search: {
-          notRefresh: 'detail,nav1'
+          refresh: [/detail/, /nav1/]
         }
       }
     }

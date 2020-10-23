@@ -4,6 +4,8 @@
     <div class="content">
       <long-cache
         map-key="home"
+        :keep-active="true"
+        :rules="rules"
       >
         <router-view />
       </long-cache>
@@ -19,6 +21,17 @@
 <script>
 export default {
   name: 'home',
+
+  data () {
+    return {
+      rules: {
+        nav1: {
+          refresh: 'detail'
+        }
+      }
+    }
+  },
+
   mounted () {
     console.log('home mounted')
   }
