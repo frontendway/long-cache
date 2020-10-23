@@ -4,7 +4,6 @@
     <div class="content">
       <long-cache
         map-key="home"
-        :keep-active="true"
         :rules="rules"
       >
         <router-view />

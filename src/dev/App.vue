@@ -2,7 +2,6 @@
   <div id="app">
     <long-cache
       map-key="root"
-      exclude="home"
       :rules="rules"
     >
       <router-view />

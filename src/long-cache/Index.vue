@@ -83,6 +83,7 @@ export default {
       const key = fetchkey(componentVnode, options)
 
       if (isRefresh(rules, name, getPrevRouteName())) {
+        this._vnode = null
         storage[key] = null
         splice(storage.keys, key)
       }
