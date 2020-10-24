@@ -43,12 +43,13 @@ function type (target) {
 
 function match (rules, name) {
   return rules.some(rule => {
+    if (rule === '*') return true
+
     return type(rule) === REGEXP ? rule.test(name) : rule === name
   })
 }
 
 export const isRefresh = (rules, name, beforeRouteName) => {
-  // debugger
   if (!rules || !name || !beforeRouteName) return
 
   const rule = rules[name]
@@ -65,17 +66,16 @@ export const isRefresh = (rules, name, beforeRouteName) => {
 
 export const allow = (rules, name) => {
   const originType = type(rules)
+
   if (Array.isArray(rules)) {
     return match(rules, name)
+  } else if (rules === '*') {
+    return true
   } else if (originType === STRING) {
-    return rules.split(',').indexOf(name) > -1
+    return (rules.split(',').indexOf(name) > -1)
   } else if (originType === REGEXP) {
     return rules.test(name)
   }
-}
-
-export const fetchRouteName = key => {
-  if (key) return window.localStorage.getItem(key) || ''
 }
 
 export const splice = (list, key) => {
@@ -100,7 +100,7 @@ export const removeInactivation = (
 }
 
 export const strategy = (keys, max, cache, current) => {
-  if (max && keys.length > Number.parseInt(max)) {
+  if (max && keys.length > max) {
     removeInactivation(cache, keys[0], keys, current)
   }
 }

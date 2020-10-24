@@ -9,7 +9,6 @@ import {
   globalMap,
   isRefresh,
   strategyWrap,
-  fetchRouteName,
   fetchFirstCVnode,
   fetchComponentName,
   removeInactivation,
@@ -81,8 +80,8 @@ export default {
       const key = fetchkey(componentVnode, options)
 
       if (isRefresh(rules, name, getPrevRouteName())) {
-        storage[key] = null
         this._vnode = null
+        storage[key] = null
         splice(storage.keys, key)
       }
 
