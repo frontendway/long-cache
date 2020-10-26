@@ -10,10 +10,11 @@ import {
   isRefresh,
   strategyWrap,
   fetchFirstCVnode,
+  setPrevRouteName,
+  getPrevRouteName,
   fetchComponentName,
   removeInactivation,
-  setPrevRouteName,
-  getPrevRouteName
+  updateComponentToRefresh
 } from './index.js'
 
 export default {
@@ -80,9 +81,7 @@ export default {
       const key = fetchkey(componentVnode, options)
 
       if (isRefresh(rules, name, getPrevRouteName())) {
-        this._vnode = null
-        storage[key] = null
-        splice(storage.keys, key)
+        updateComponentToRefresh(storage, key, _vnode, componentVnode)
       }
 
       const component = storage[key]

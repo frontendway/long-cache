@@ -4,6 +4,8 @@
     <div class="content">
       <long-cache
         map-key="home"
+        :keep-active="false"
+        :rules="rules"
       >
         <router-view />
       </long-cache>
@@ -24,7 +26,7 @@ export default {
     return {
       rules: {
         nav1: {
-          refresh: 'detail'
+          refresh: '*'
         }
       }
     }

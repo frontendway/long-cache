@@ -42,11 +42,7 @@ function type (target) {
 }
 
 function match (rules, name) {
-  return rules.some(rule => {
-    if (rule === '*') return true
-
-    return type(rule) === REGEXP ? rule.test(name) : rule === name
-  })
+  return rules.some(rule => (type(rule) === REGEXP ? rule.test(name) : rule === name))
 }
 
 export const isRefresh = (rules, name, beforeRouteName) => {
@@ -62,6 +58,16 @@ export const isRefresh = (rules, name, beforeRouteName) => {
   ) {
     return true
   }
+}
+
+export const updateComponentToRefresh = (storage, key, _vnode, current) => {
+  const prevTag = _vnode && _vnode.tag
+  if (prevTag && prevTag === current.tag) {
+    _vnode.tag = prevTag.slice(0, -1)
+  }
+  
+  delete storage[key]
+  splice(storage.keys, key)
 }
 
 export const allow = (rules, name) => {

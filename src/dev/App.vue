@@ -2,6 +2,7 @@
   <div id="app">
     <long-cache
       map-key="root"
+      exclude="home"
       :rules="rules"
     >
       <router-view />
@@ -14,8 +15,8 @@ export default {
   data () {
     return {
       rules: {
-        search: {
-          refresh: '*'
+        detail: {
+          refresh: 'search,nav1'
         }
       }
     }
