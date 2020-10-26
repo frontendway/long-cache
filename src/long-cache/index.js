@@ -48,7 +48,6 @@ function match (rules, name) {
 }
 
 export const isRefresh = (rules, name, beforeRouteName) => {
-  // debugger
   if (!rules || !name || !beforeRouteName) return
 
   const rule = rules[name]

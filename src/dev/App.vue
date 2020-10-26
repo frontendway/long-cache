@@ -15,7 +15,7 @@ export default {
     return {
       rules: {
         search: {
-          refresh: [/detail/, /nav1/]
+          refresh: '*'
         }
       }
     }
