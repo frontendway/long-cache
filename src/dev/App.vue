@@ -48,4 +48,31 @@ export default {
     max: 
       最大缓存数量
 */
+
+/* 
+search.vue
+  beforeRouteLeave(to, from, next) {
+    if (to.name === 'deviceView') {
+      next()
+    } else {
+      this.$store.commit('keepOut')
+      next()
+    }
+  },
+  beforeRouteEnter(to, from, next) {
+    next((vm) => {
+      vm.$store.commit('keepIn', 'deviceSearch')
+    })
+  }
+
+view.vue
+  beforeRouteLeave (to, from, next) {
+    if (to.name !== 'deviceSearch') {
+      this.$store.commit('keepOut')
+    }
+    next()
+  }
+
+
+*/
 </script>
