@@ -1,17 +1,16 @@
 const STRING = '[object String]'
 const REGEXP = '[object RegExp]'
-let prevRouteName = null
 
+export const globalMap = new Map()
+export const allowTypes = [String, RegExp, Array]
+
+let prevRouteName = null
 export const setPrevRouteName = value => {
   prevRouteName = value
 }
 export const getPrevRouteName = () => {
   return prevRouteName
 }
-
-export const globalMap = new Map()
-
-export const allowTypes = [String, RegExp, Array]
 
 function isAsyncVnode (vnode) {
   return vnode.isComment && vnode.asyncFactory
